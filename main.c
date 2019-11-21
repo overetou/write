@@ -19,9 +19,9 @@ void		event_loop(t_master* m)
 
 void		app_exec(t_master* m)
 {
-	SDL_Surface*		text_surface;
-	SDL_Texture*		text_texture;
-	SDL_Rect			target_surface;
+	//SDL_Surface*		text_surface;
+	//SDL_Texture*		text_texture;
+	//SDL_Rect			target_surface;
 
 	set_background(m->rend, m->background);
 	//text_surface = TTF_RenderText_Blended(m->main_font, "Bonjour!", m->forground);
