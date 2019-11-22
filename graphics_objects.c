@@ -7,29 +7,25 @@ void		get_window_size(t_master* m, int* w, int* h)
 
 t_text_edit_space* create_text_edit_space(t_master* m, const char* file_name)
 {
-	t_text_edit_space* new;
-
-	new = malloc(sizeof(t_text_edit_space));
-	if (new == NULL)exit(0);
+	m->txt_edit_space = malloc(sizeof(t_text_edit_space));
+	if (m->txt_edit_space == NULL)exit(0);
 	if (file_name);
 	else
 	{
-		new->text = malloc(sizeof(char));
-		if (new->text == NULL)
+		m->txt_edit_space->text = malloc(sizeof(char));
+		if (m->txt_edit_space->text == NULL)
 			exit(0);
 	}
-	new->cursor.pos = 0;
-	set_draw_color(m->ligther_background, m->rend);
-	new->frame.x = m->win_space.w / 6;
-	new->frame.w = m->win_space.w - (new->frame.x * 2);
-	new->frame.y = m->win_space.h / 95;
-	new->frame.h = m->win_space.h - (new->frame.y * 2);
-	SDL_RenderFillRect(m->rend, &(new->frame));
-	place_cursor(new, m->main_font);
-	set_draw_color(m->forground, m->rend);
-	SDL_RenderFillRect(m->rend, &(new->cursor.frame));
+	m->txt_edit_space->cursor.pos = 0;
+	m->txt_edit_space->frame.x = m->win_space.w / 6;
+	m->txt_edit_space->frame.w = m->win_space.w - (m->txt_edit_space->frame.x * 2);
+	m->txt_edit_space->frame.y = m->win_space.h / 95;
+	m->txt_edit_space->frame.h = m->win_space.h - (m->txt_edit_space->frame.y * 2);
+	draw_full_rectangle(m->rend, &(m->txt_edit_space->frame), m->ligther_background);
+	place_cursor(m->txt_edit_space, m->main_font);
+	draw_cursor(m);
 	SDL_RenderPresent(m->rend);
-	return(new);
+	return(m->txt_edit_space);
 }
 
 void		place_cursor(t_text_edit_space* edit_frame, TTF_Font *font)
@@ -40,4 +36,42 @@ void		place_cursor(t_text_edit_space* edit_frame, TTF_Font *font)
 	//dessiner un rectange d'une surface pouvant contenir le plus grand caractere du set.
 	edit_frame->cursor.frame.w = CURSOR_THICKNESS;
 	edit_frame->cursor.frame.h = TTF_FontHeight(font);
+}
+
+void clear_cursor(t_master* m)
+{
+	draw_full_rectangle(m->rend, &(m->txt_edit_space->cursor.frame), m->ligther_background);
+}
+
+void draw_cursor(t_master* m)
+{
+	draw_full_rectangle(m->rend, &(m->txt_edit_space->cursor.frame), m->forground);
+}
+
+void print_letter(t_master* m, char* letter)
+{
+	SDL_Surface*		text_surface;
+	SDL_Texture*		text_texture;
+	SDL_Rect			target_surface;
+
+	text_surface = TTF_RenderText_Blended(m->main_font, letter, m->forground);
+	text_texture = SDL_CreateTextureFromSurface(m->rend, text_surface);
+	target_surface.x = m->txt_edit_space->cursor.frame.x;
+	target_surface.y = m->txt_edit_space->cursor.frame.y;
+	SDL_QueryTexture(text_texture, NULL, NULL, &(target_surface.w), &(target_surface.h));
+	SDL_RenderCopy(m->rend, text_texture, NULL, &target_surface);
+	m->txt_edit_space->cursor.frame.x += target_surface.w;
+}
+
+void edit_space_add_letter(t_master* m, char *text)
+{
+	/*We have the cursor at the right position. To write text, we have to:
+	clear the cursor.
+	write the letter at its place.
+	move the cursor position at the top left corner of the written letter.
+	render present.*/
+	clear_cursor(m);
+	print_letter(m, text);
+	draw_cursor(m);
+	SDL_RenderPresent(m->rend);
 }

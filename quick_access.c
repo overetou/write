@@ -23,3 +23,9 @@ void		set_background(SDL_Renderer* r, SDL_Color bg)
 	SDL_RenderClear(r);
 	SDL_RenderPresent(r);
 }
+
+void		draw_full_rectangle(SDL_Renderer* rend, SDL_Rect* rect, SDL_Color color)
+{
+	set_draw_color(color	, rend);
+	SDL_RenderFillRect(rend, rect);
+}

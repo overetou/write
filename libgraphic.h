@@ -20,5 +20,6 @@ void	sdl_test_success(char test, const char* str);
 void	set_background(SDL_Renderer* r, SDL_Color bg);
 void	set_color(SDL_Color* color, int r, int g, int b, int a);
 void		set_draw_color(SDL_Color color, SDL_Renderer* r);
+void		draw_full_rectangle(SDL_Renderer* rend, SDL_Rect* rect, SDL_Color color);
 
 #endif

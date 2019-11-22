@@ -32,6 +32,7 @@ typedef struct	s_master
 	t_space		win_space;
 	SDL_Renderer* rend;
 	TTF_Font* main_font;
+	t_text_edit_space* txt_edit_space;
 	SDL_Color	background;
 	SDL_Color	ligther_background;
 	SDL_Color	forground;
@@ -40,4 +41,8 @@ typedef struct	s_master
 void		get_window_size(t_master* m, int* w, int* h);
 t_text_edit_space* create_text_edit_space(t_master* m, const char* file_name);
 void		place_cursor(t_text_edit_space* edit_frame, TTF_Font *font);
+void		clear_cursor(t_master* m);
+void		draw_cursor(t_master *m);
+void		print_letter(t_master* m, char *letter);
+void		edit_space_add_letter(t_master* m, char *text);
 #endif

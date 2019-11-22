@@ -8,10 +8,14 @@ void		event_loop(t_master* m)
 	while (fine)
 	{
 		SDL_WaitEvent(&event);
-		switch (event.key.keysym.sym)
+		if (event.type == SDL_KEYDOWN)
 		{
-		case SDLK_ESCAPE:
-			fine = SDL_FALSE;
+			if (event.key.keysym.sym == SDLK_ESCAPE)
+				fine = SDL_FALSE;
+		}
+		else if (event.type == SDL_TEXTINPUT)
+		{
+			edit_space_add_letter(m, event.text.text);
 		}
 	}
 	(void)m;
@@ -19,21 +23,11 @@ void		event_loop(t_master* m)
 
 void		app_exec(t_master* m)
 {
-	//SDL_Surface*		text_surface;
-	//SDL_Texture*		text_texture;
-	//SDL_Rect			target_surface;
-
 	set_background(m->rend, m->background);
-	//text_surface = TTF_RenderText_Blended(m->main_font, "Bonjour!", m->forground);
-	//text_texture = SDL_CreateTextureFromSurface(m->rend, text_surface);
-	//target_surface.x = 20; target_surface.y = 20;
-	//SDL_QueryTexture(text_texture, NULL, NULL, &(target_surface.w), &(target_surface.h));
-	//SDL_RenderCopy(m->rend, text_texture, NULL, &target_surface);
-	//SDL_RenderPresent(m->rend);
-	t_text_edit_space* edit_space = create_text_edit_space(m, NULL);
+	m->txt_edit_space = create_text_edit_space(m, NULL);
 	event_loop(m);
-	free(edit_space->text);
-	free(edit_space);
+	free(m->txt_edit_space->text);
+	free(m->txt_edit_space);
 }
 
 void		init_graphics(t_master* m)
@@ -52,6 +46,7 @@ void		init_graphics(t_master* m)
 	set_color(&(m->ligther_background), LIGHT_BACKGROUND);
 
 	get_window_size(m, &(m->win_space.w), &(m->win_space.h));
+	SDL_StartTextInput();
 }
 
 void		app_quit(t_master* m)
