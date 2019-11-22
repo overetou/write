@@ -44,5 +44,7 @@ void		place_cursor(t_text_edit_space* edit_frame, TTF_Font *font);
 void		clear_cursor(t_master* m);
 void		draw_cursor(t_master *m);
 void		print_letter(t_master* m, char *letter);
+void		remove_previous_letter(m);
 void		edit_space_add_letter(t_master* m, char *text);
+void		edit_space_remove_letter(t_master *m);
 #endif

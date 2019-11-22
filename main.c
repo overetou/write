@@ -12,6 +12,10 @@ void		event_loop(t_master* m)
 		{
 			if (event.key.keysym.sym == SDLK_ESCAPE)
 				fine = SDL_FALSE;
+			else if (event.key.keysym.sym == SDLK_BACKSPACE)
+			{
+				edit_space_remove_letter(m);
+			}
 		}
 		else if (event.type == SDL_TEXTINPUT)
 		{

@@ -1,4 +1,5 @@
 #include "write.h"
+#include <string.h>
 
 void		get_window_size(t_master* m, int* w, int* h)
 {
@@ -63,15 +64,30 @@ void print_letter(t_master* m, char* letter)
 	m->txt_edit_space->cursor.frame.x += target_surface.w;
 }
 
+void remove_previous_letter(m)
+{
+	SDL_Rect* letter_surface;
+
+	//find the size of the last letter.
+	
+	//remove the cursor
+	clear_cursor(m);
+	//replace the letter with blank. Place the cursor at the top right.
+	//draw the cursor
+	draw_cursor(m);
+}
+
 void edit_space_add_letter(t_master* m, char *text)
 {
-	/*We have the cursor at the right position. To write text, we have to:
-	clear the cursor.
-	write the letter at its place.
-	move the cursor position at the top left corner of the written letter.
-	render present.*/
+	strcat(m->txt_edit_space->text, text);
 	clear_cursor(m);
 	print_letter(m, text);
 	draw_cursor(m);
 	SDL_RenderPresent(m->rend);
+}
+
+void edit_space_remove_letter(t_master *m)
+{
+	remove_previous_letter(m);
+	str_shorten(m->txt_edit_space->text, 1);
 }
