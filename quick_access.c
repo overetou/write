@@ -24,8 +24,38 @@ void		set_background(SDL_Renderer* r, SDL_Color bg)
 	SDL_RenderPresent(r);
 }
 
+void		rect_copy_coord(SDL_Rect* source, SDL_Rect* dest)
+{
+	dest->x = source->x;
+	dest->y = source->y;
+}
+
 void		draw_full_rectangle(SDL_Renderer* rend, SDL_Rect* rect, SDL_Color color)
 {
 	set_draw_color(color	, rend);
 	SDL_RenderFillRect(rend, rect);
+}
+
+char	*	str_shorten(char* str, size_t n)
+{
+	size_t	str_len;
+	char* save;
+
+	str_len = strlen(str) - n + 1;
+	save = str;
+	str = realloc(str, str_len);
+	if (str == NULL)
+		free(save);
+	else
+		str[str_len - 1] = '\0';
+	return (str);
+}
+
+size_t	strlen(const char* s)
+{
+	size_t	i = 0;
+
+	while (s[i])
+		i++;
+	return (i);
 }

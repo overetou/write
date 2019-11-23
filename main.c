@@ -11,9 +11,13 @@ void		event_loop(t_master* m)
 		if (event.type == SDL_KEYDOWN)
 		{
 			if (event.key.keysym.sym == SDLK_ESCAPE)
+			{
+				//puts("escape key hit. Escaping.");
 				fine = SDL_FALSE;
+			}
 			else if (event.key.keysym.sym == SDLK_BACKSPACE)
 			{
+				//puts("triggered edit space remove letter.");
 				edit_space_remove_letter(m);
 			}
 		}
@@ -22,7 +26,6 @@ void		event_loop(t_master* m)
 			edit_space_add_letter(m, event.text.text);
 		}
 	}
-	(void)m;
 }
 
 void		app_exec(t_master* m)

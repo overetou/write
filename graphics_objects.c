@@ -1,9 +1,18 @@
 #include "write.h"
-#include <string.h>
 
 void		get_window_size(t_master* m, int* w, int* h)
 {
 	SDL_GetRendererOutputSize(m->rend, w, h);
+}
+
+char		*one_byte_string(void)
+{
+	char* new;
+
+	new = malloc(sizeof(char));
+	sdl_test_success(new != NULL, "One byte malloc failed.");
+	new[0] = '\0';
+	return (new);
 }
 
 t_text_edit_space* create_text_edit_space(t_master* m, const char* file_name)
@@ -13,7 +22,7 @@ t_text_edit_space* create_text_edit_space(t_master* m, const char* file_name)
 	if (file_name);
 	else
 	{
-		m->txt_edit_space->text = malloc(sizeof(char));
+		m->txt_edit_space->text = one_byte_string();
 		if (m->txt_edit_space->text == NULL)
 			exit(0);
 	}
@@ -31,6 +40,7 @@ t_text_edit_space* create_text_edit_space(t_master* m, const char* file_name)
 
 void		place_cursor(t_text_edit_space* edit_frame, TTF_Font *font)
 {
+	edit_frame->cursor.pos = 0;
 	//The actual writing space must be a bit smaller than the visual frame.
 	edit_frame->cursor.frame.x = edit_frame->frame.x + edit_frame->frame.w / 85;
 	edit_frame->cursor.frame.y = edit_frame->frame.y + edit_frame->cursor.frame.x - edit_frame->frame.x;
@@ -57,29 +67,65 @@ void print_letter(t_master* m, char* letter)
 
 	text_surface = TTF_RenderText_Blended(m->main_font, letter, m->forground);
 	text_texture = SDL_CreateTextureFromSurface(m->rend, text_surface);
-	target_surface.x = m->txt_edit_space->cursor.frame.x;
-	target_surface.y = m->txt_edit_space->cursor.frame.y;
+	rect_copy_coord(&(m->txt_edit_space->cursor.frame), &target_surface);
 	SDL_QueryTexture(text_texture, NULL, NULL, &(target_surface.w), &(target_surface.h));
 	SDL_RenderCopy(m->rend, text_texture, NULL, &target_surface);
 	m->txt_edit_space->cursor.frame.x += target_surface.w;
+	(m->txt_edit_space->cursor.pos)++;
 }
 
-void remove_previous_letter(m)
+void		get_letter_size(char* txt, TTF_Font* font, SDL_Rect* frame)
 {
-	SDL_Rect* letter_surface;
+	char		isolate[2];
+
+	isolate[0] = txt[0];
+	isolate[1] = '\0';
+	TTF_SizeText(font, isolate, &(frame->w), &(frame->h));
+}
+
+void remove_previous_letter(t_master *m)
+{
+	SDL_Rect letter_frame;
 
 	//find the size of the last letter.
 	
 	//remove the cursor
 	clear_cursor(m);
 	//replace the letter with blank. Place the cursor at the top right.
+	get_letter_size(m->txt_edit_space->text + m->txt_edit_space->cursor.pos, m->main_font, &letter_frame);
+	letter_frame.x = m->txt_edit_space->cursor.frame.x - letter_frame.w;
+	letter_frame.y = m->txt_edit_space->cursor.frame.y;
+	draw_full_rectangle(m->rend, &letter_frame, m->ligther_background);
+	rect_copy_coord(&letter_frame, &(m->txt_edit_space->cursor.frame));
 	//draw the cursor
 	draw_cursor(m);
 }
 
+void		strcopy(char* dest, char* source)
+{
+	while (*source)
+	{
+		*dest = *source;
+		source++;
+		dest++;
+	}
+	*dest = '\0';
+}
+
+char		*str_add(char* str, char* add, size_t add_len)
+{
+	size_t	base_len;
+
+	base_len = strlen(str);
+	str = realloc(str, base_len + add_len + 1);
+	sdl_test_success(str != NULL, "str_add malloc failed.");
+	strcopy(str + base_len, add);
+	return (str);
+}
+
 void edit_space_add_letter(t_master* m, char *text)
 {
-	strcat(m->txt_edit_space->text, text);
+	m->txt_edit_space->text = str_add(m->txt_edit_space->text, text, 1);
 	clear_cursor(m);
 	print_letter(m, text);
 	draw_cursor(m);
@@ -88,6 +134,11 @@ void edit_space_add_letter(t_master* m, char *text)
 
 void edit_space_remove_letter(t_master *m)
 {
+	if (m->txt_edit_space->cursor.pos != 0)
+		(m->txt_edit_space->cursor.pos)--;
+	else
+		return;
 	remove_previous_letter(m);
-	str_shorten(m->txt_edit_space->text, 1);
+	SDL_RenderPresent(m->rend);
+	m->txt_edit_space->text = str_shorten(m->txt_edit_space->text, 1);
 }

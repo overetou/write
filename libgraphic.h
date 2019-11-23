@@ -21,5 +21,8 @@ void	set_background(SDL_Renderer* r, SDL_Color bg);
 void	set_color(SDL_Color* color, int r, int g, int b, int a);
 void		set_draw_color(SDL_Color color, SDL_Renderer* r);
 void		draw_full_rectangle(SDL_Renderer* rend, SDL_Rect* rect, SDL_Color color);
+void		rect_copy_coord(SDL_Rect* source, SDL_Rect* dest);
+char* str_shorten(char* str, size_t n);
+size_t	strlen(const char* s);
 
 #endif
