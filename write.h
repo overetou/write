@@ -18,10 +18,19 @@ typedef struct	s_cursor
 	SDL_Rect		frame;
 }				t_cursor;
 
+typedef struct s_abs_rect
+{
+	int	x;
+	int	y;
+	int	right_x;
+	int	right_y;
+}				t_abs_rect;
+
 typedef struct	s_text_edit_space
 {
 	t_cursor		cursor;
 	SDL_Rect		frame;
+	t_abs_rect inner_frame;
 	char* text;
 	FILE* linked_file;
 }				t_text_edit_space;
