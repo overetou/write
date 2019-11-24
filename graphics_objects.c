@@ -5,6 +5,11 @@ void		get_window_size(t_master* m, int* w, int* h)
 	SDL_GetRendererOutputSize(m->rend, w, h);
 }
 
+t_line_meta* get_last_l_meta(t_text_edit_space* edit_space)
+{
+	return ((t_line_meta*)(edit_space->lines_meta.last));
+}
+
 char		*one_byte_string(void)
 {
 	char* new;
@@ -48,6 +53,9 @@ t_text_edit_space* create_text_edit_space(t_master* m, const char* file_name)
 	place_cursor(m->txt_edit_space, m->main_font);
 	draw_cursor(m);
 	SDL_RenderPresent(m->rend);
+	//init the line meta track. This link will never be used but will allow us to just add future links.
+	track_init(&(m->txt_edit_space->lines_meta), (t_link*)line_meta_init(0));
+
 	return(m->txt_edit_space);
 }
 
@@ -84,6 +92,7 @@ void print_letter(t_master* m, char* letter)
 	SDL_QueryTexture(text_texture, NULL, NULL, &(target_surface.w), &(target_surface.h));
 	if (m->txt_edit_space->cursor.frame.x + target_surface.w + CURSOR_THICKNESS > m->txt_edit_space->inner_frame.right_x)
 	{
+		track_add(&(m->txt_edit_space->lines_meta), (t_link*)line_meta_init(m->txt_edit_space->cursor.frame.x));
 		m->txt_edit_space->cursor.frame.x = m->txt_edit_space->inner_frame.x;
 		m->txt_edit_space->cursor.frame.y += TTF_FontLineSkip(m->main_font);
 	}
@@ -120,7 +129,8 @@ void remove_previous_letter(t_master *m)
 	if (letter_frame.x == m->txt_edit_space->inner_frame.x &&
 		letter_frame.y != m->txt_edit_space->inner_frame.y)
 	{
-		m->txt_edit_space->cursor.frame.x = m->txt_edit_space->inner_frame.right_x - CURSOR_THICKNESS;
+		m->txt_edit_space->cursor.frame.x = get_last_l_meta(m->txt_edit_space)->endline_x;
+		track_remove_last(&(m->txt_edit_space->lines_meta), free);
 		m->txt_edit_space->cursor.frame.y -= TTF_FontLineSkip(m->main_font);
 	}
 	else
@@ -168,4 +178,14 @@ void edit_space_remove_letter(t_master *m)
 	remove_previous_letter(m);
 	SDL_RenderPresent(m->rend);
 	m->txt_edit_space->text = str_shorten(m->txt_edit_space->text, 1);
+}
+
+t_line_meta* line_meta_init(int x)
+{
+	t_line_meta* new;
+
+	new = malloc(sizeof(t_line_meta));
+	sdl_test_success(new != NULL, "Failed to allocate a line meta link.");
+	new->endline_x = x;
+	return (new);
 }

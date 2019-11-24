@@ -11,6 +11,12 @@
 #include <SDL.h>
 #include <stdio.h>
 
+typedef struct s_line_meta
+{
+	t_link* next;
+	int	endline_x;
+}t_line_meta;
+
 typedef struct	s_cursor
 {
 	size_t		pos;
@@ -31,6 +37,7 @@ typedef struct	s_text_edit_space
 	t_cursor		cursor;
 	SDL_Rect		frame;
 	t_abs_rect inner_frame;
+	t_track lines_meta;
 	char* text;
 	FILE* linked_file;
 }				t_text_edit_space;
@@ -56,4 +63,5 @@ void		print_letter(t_master* m, char *letter);
 void		remove_previous_letter(t_master *m);
 void		edit_space_add_letter(t_master* m, char *text);
 void		edit_space_remove_letter(t_master *m);
+t_line_meta* line_meta_init(int x);
 #endif
