@@ -27,6 +27,9 @@
     <ClCompile Include="sdl_quit.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="edit_space.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="write.h">
