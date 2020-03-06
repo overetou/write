@@ -23,7 +23,7 @@ VPATH=$(SRC_DIR)
 
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(TARGET) $(LIBS_FLAGS)
-	@echo "Compilation succeded."
+	@echo -e "\033[0;32mCompilation succeeded.\033[0m"
 
 $(OBJS): $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c |$(OBJ_DIR)
 	$(COMPILE.c) $(OUTPUT_OPTIONS) -o $@ $<
