@@ -1,5 +1,7 @@
+#include <write.h>
+
 int main()
 {
-    /* code */
+    puts("Hi kids!");
     return 0;
 }

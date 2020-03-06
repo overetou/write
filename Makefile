@@ -12,8 +12,10 @@ CFLAGS=-Wall -Wextra -Werror
 LIBS=SDL2
 
 #From there we use the info to compile everything.
-OBJS=$(patsubst %.c,%.o,$(wildcard $(SRC_DIR)/*.c))
+SOURCES:=$(wildcard $(SRC_DIR)/*.c)
+OBJS:=$(SOURCES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 INC_FLAGS=$(addprefix -I,$(INC_DIRS))
+CFLAGS+=$(INC_FLAGS)
 LIBS_FLAGS=$(addprefix -l,$(LIBS))
 VPATH=$(SRC_DIR)
 
@@ -23,15 +25,13 @@ $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(TARGET) $(LIBS_FLAGS)
 	@echo "Compilation succeded."
 
-$(OBJS): |$(OBJ_DIR)
+$(OBJS): $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c |$(OBJ_DIR)
+	$(COMPILE.c) $(OUTPUT_OPTIONS) -o $@ $<
 
 $(OBJ_DIR):
 	mkdir $(OBJ_DIR)
 
-$(OBJ_DIR)/%.o:%.c
-	$(COMPILE.c) $(OUTPUT_OPTIONS) $(CFLAGS) $<
-
 clean:
-	rm -rf OBJS
+	rm -rf $(OBJS) $(TARGET)
 
 re: clean $(TARGET)
