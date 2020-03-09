@@ -4,9 +4,9 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include <libft.h>
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 
-# define FONT_PATH "raleway/Raleway-Regular.ttf"
+# define FONT_PATH "./raleway/Raleway-Regular.ttf"
 # define FONT_SIZE 18
 
 # define BACKGROUND 50, 50, 50, 255

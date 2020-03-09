@@ -10,7 +10,7 @@ LIB_DIRS=/media/jxxj/DATA/Documents/code/unix/config/libft
 #Compilation related indications
 CC=gcc
 CFLAGS=-Wall -Wextra -Werror
-LIBS=SDL2 ft SDL_ttf
+LIBS=SDL2 ft SDL2_ttf
 
 #From there we use the info to compile everything.
 SOURCES:=$(wildcard $(SRC_DIR)/*.c)

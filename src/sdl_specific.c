@@ -15,9 +15,11 @@ void    finish_setup_and_run(SDL_Window* window, SDL_Renderer* renderer)
 {
     t_app       app;
 
+    putendl(FONT_PATH);
     app.main_font = TTF_OpenFont(FONT_PATH, FONT_SIZE);
     if (app.main_font)
     {
+        //log_s("Font loaded");
         set_color(&(app.background), BACKGROUND);
 	    set_color(&(app.forground), FORGROUND);
         set_color(&(app.ligther_background), LIGHT_BACKGROUND);
@@ -38,8 +40,10 @@ void    set_window_and_run(SDL_Window* window)
     SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
     if (renderer)
     {
+        //log_s("renderer created");
         if (TTF_Init() == 0)
         {
+            //log_s("TTF lib inited");
             finish_setup_and_run(window, renderer);
             TTF_Quit();
         }
