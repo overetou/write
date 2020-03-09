@@ -32,5 +32,6 @@ typedef struct  s_app
 void	set_color(SDL_Color* color, int r, int g, int b, int a);
 void    set_window_and_run(SDL_Window* window);
 void    draw_and_run(t_app* app);
+void    interact_with_user(t_app* app);
 
 #endif /* WRITE_H */
