@@ -35,13 +35,7 @@ BOOL	set_background(SDL_Renderer* r, SDL_Color bg)
     return 0;
 }
 
-void    draw_and_run(t_app* app)
+void	refresh_display(t_app* app)
 {
-    if (set_background(app->sdl_material.renderer, app->background))
-    {
-        set_welcome_screen(app);
-        interact_with_user(app);
-    }
-    else
-        putendl("Failed to set background");
+	SDL_RenderPresent(app->sdl_material.renderer);
 }
