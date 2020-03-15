@@ -9,7 +9,7 @@
 # define FONT_PATH "./raleway/Raleway-Regular.ttf"
 # define FONT_SIZE 18
 
-# define BACKGROUND 50, 50, 50, 255
+# define BACKGROUND 75, 70, 70, 255
 # define FORGROUND 250, 250, 250, 255
 # define LIGHT_BACKGROUND 65, 65, 65, 255
 
